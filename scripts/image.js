@@ -1,3 +1,4 @@
+const fs = require("fs");
 const fsPromises = require("fs/promises");
 const path = require("path");
 const sizeOf = require("image-size");
@@ -24,7 +25,7 @@ let configJSON;
 try {
   configJSON = fs.readFileSync(path.join(process.cwd(), "./config.json"));
 } catch (err) {
-  console.log("No config JSON.");
+  console.log("No config JSON", err);
 }
 const config = configJSON != null ? JSON.parse(configJSON) : {};
 

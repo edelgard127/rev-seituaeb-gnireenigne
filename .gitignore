@@ -8,3 +8,4 @@ content/**/*.webp
 .DS_Store
 /*.exe
 yarn.lock
+/config.json
