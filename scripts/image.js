@@ -19,8 +19,17 @@ const {
 } = require("./utils/string");
 const { pLimit } = require("./utils/pool");
 
-const ENLARGE_WORKERS_COUNT = 2;
-const COMPRESS_WORKERS_COUNT = 3;
+// Read config
+let configJSON;
+try {
+  configJSON = fs.readFileSync(path.join(process.cwd(), "./config.json"));
+} catch (err) {
+  console.log("No config JSON.");
+}
+const config = configJSON != null ? JSON.parse(configJSON) : {};
+
+const ENLARGE_WORKERS_COUNT = config.enlargeWorkersCount || 2;
+const COMPRESS_WORKERS_COUNT = config.compressWorkersCount || 3;
 const WAIFU2X_BIN_PATH = path.join(
   process.cwd(),
   "./scripts/static/waifu2x/waifu2x-ncnn-vulkan.exe"
@@ -32,6 +41,9 @@ const MIN_WIDTH_SKIP_ENLARGE = 2000;
 const MAX_PAGE_WIDTH = 4096;
 const IDEAL_PAGE_WIDTH = 2048;
 const IDEAL_THUMBNAIL_WIDTH = 600;
+
+console.log(`Number of enlarging workers: ${ENLARGE_WORKERS_COUNT}`);
+console.log(`Number of compressing workers: ${COMPRESS_WORKERS_COUNT}`);
 
 async function compressFile(filePath, enlargedTargetWidth, maximumWidth) {
   const fileExtension = getFileExtension(filePath);
